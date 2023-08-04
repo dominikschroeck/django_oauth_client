@@ -7,6 +7,11 @@
 #                                                                                                       __/ |
 #                                                                                                      |___/
 
+"""
+
+"""
+from pathlib import Path
+
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
@@ -14,6 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class OAuthSettings(BaseSettings):
+    """
+    Settings required for OAuth
+    """
     oauth_client_id: str = Field(env="OAUTH_CLIENT_ID")
     oauth_client_secret: str = Field(env="OAUTH_CLIENT_SECRET")
     oauth_conf_url: str = Field(env="OAUTH_CONF_URL")

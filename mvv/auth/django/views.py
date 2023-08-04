@@ -7,15 +7,19 @@
 #                                                                                                       __/ |
 #                                                                                                      |___/
 
+"""
+Views for OAuth
+"""
+
 import json
 from functools import wraps
 
 from authlib.integrations.django_client import OAuth
-
-from .settings import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
+from django.urls import reverse
 
+from .settings import settings
 
 oauth = OAuth()
 oauth.register(
@@ -30,22 +34,44 @@ oauth.register(
 
 
 def protected(f):
+    """
+
+    :param f:
+    :return:
+    """
     @wraps(f)
     def decorator(request, *args, **kwargs):
+        """
+
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
         if request.COOKIES.get('user'):
             return f(request, *args, **kwargs)
-        else:
-            return redirect('/login/')
+
+        return redirect('/login/')
 
     return decorator
 
 
 def login(request):
+    """
+
+    :param request:
+    :return:
+    """
     redirect_uri = request.build_absolute_uri(reverse('auth'))
     return oauth.keycloak.authorize_redirect(request, redirect_uri)
 
 
 def auth(request):
+    """
+
+    :param request:
+    :return:
+    """
     token = oauth.keycloak.authorize_access_token(request)
     response = HttpResponseRedirect("/")
     response.set_cookie('user', json.dumps(token['userinfo']))
@@ -53,6 +79,12 @@ def auth(request):
 
 
 def logout(request):
+    """
+
+    :param request:
+    :return:
+    """
     response = HttpResponseRedirect("/")
-    response.delete_cookie('user')
+    if request.COOKIES.get('user'):
+        response.delete_cookie('user')
     return response
