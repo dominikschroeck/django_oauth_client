@@ -13,7 +13,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from .settings import oauth_settings
+from mvv.auth.common.settings import oauth_settings
 
 logger = logging.getLogger(__name__)
 
