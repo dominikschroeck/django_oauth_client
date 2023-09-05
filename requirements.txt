@@ -1,4 +1,3 @@
-pydantic-settings
 Django
 Authlib
 requests

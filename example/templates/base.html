@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/base.css" type="text/css">
+    <title>{% block title %}Base Titel{% endblock %}</title>
+</head>
+<body>
+    <div class="topnav">
+        {% if user %}
+        <div class="active">Hello {{ user_name }}!</div>
+        {% endif %}
+        <a class="active" href="#home">Home</a>
+        {% if user %}
+            <div>You are logged in</div>
+            <a href="logout/">Logout</a>
+        {% else %}
+            <div>You are not logged in</div>
+            <a href="/login/">Login</a>
+        {% endif %}
+        <a href="{% url 'admin:index' %}">Admin</a>
+
+    </div>
+    {% block content %}Base Block{% endblock %}
+    <br />
+</body>
+</html>

@@ -1,39 +1,42 @@
-#  _____      _                         _      _____ _____   _____                       _ _   _
-# /  ___|    | |                       | |    |_   _|_   _| /  __ \                     | | | (_)
-# \ `--.  ___| |__  _ __ ___   ___  ___| | __   | |   | |   | /  \/ ___  _ __  ___ _   _| | |_ _ _ __   __ _
-#  `--. \/ __| '_ \| '__/ _ \ / _ \/ __| |/ /   | |   | |   | |    / _ \| '_ \/ __| | | | | __| | '_ \ / _` |
-# /\__/ / (__| | | | | | (_) |  __/ (__|   <   _| |_  | |   | \__/\ (_) | | | \__ \ |_| | | |_| | | | | (_| |
-# \____/ \___|_| |_|_|  \___/ \___|\___|_|\_\  \___/  \_/    \____/\___/|_| |_|___/\__,_|_|\__|_|_| |_|\__, |
-#                                                                                                       __/ |
-#                                                                                                      |___/
+#  _____      _                         _      _____ _____
+# /  ___|    | |                       | |    |_   _|_   _|
+# \ `--.  ___| |__  _ __ ___   ___  ___| | __   | |   | |
+#  `--. \/ __| '_ \| '__/ _ \ / _ \/ __| |/ /   | |   | |
+# /\__/ / (__| | | | | | (_) |  __/ (__|   <   _| |_  | |
+# \____/ \___|_| |_|_|  \___/ \___|\___|_|\_\  \___/  \_/
 
 """
-
+Settings class for OAuth
 """
-from pathlib import Path
+import os
 
-from pydantic import Field
-from pydantic_settings import BaseSettings
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-class OAuthSettings(BaseSettings):
+class OAuthSettings:
     """
-    Settings required for OAuth
+    Settings for OAuth
     """
-    oauth_client_id: str = Field(env="OAUTH_CLIENT_ID")
-    oauth_client_secret: str = Field(env="OAUTH_CLIENT_SECRET")
-    oauth_conf_url: str = Field(env="OAUTH_CONF_URL")
+
+    env_key_client_id = "OAUTH_CLIENT_ID"
+    env_key_client_secret = "OAUTH_CLIENT_SECRET"
+    env_key_authorization_endpoint = "OAUTH_AUTHORIZATION_ENDPOINT"
+    env_key_revoke_token_endpoint = "OAUTH_REVOKE_ENDPOINT"
+    env_key_token_endpoint = "OAUTH_TOKEN_ENDPOINT"
+    env_key_jwks_uri = "OAUTH_JWKS_URI"
+    env_key_scope = "OAUTH_SCOPE"
+    env_key_redirect_uri = "OAUTH_REDIRECT_URI"
+    env_key_oauth_metadata_url = "OAUTH_METADATA_URL"
+
+    def __init__(self):
+        self.oauth_client_id: str = os.environ.get(self.env_key_client_id)
+        self.oauth_client_secret: str = os.environ.get(self.env_key_client_secret)
+        self.oauth_authorization_endpoint: str = os.environ.get(
+            self.env_key_authorization_endpoint
+        )
+        self.oauth_revoke_token_endpoint: str = os.environ.get(self.env_key_revoke_token_endpoint)
+        self.oauth_token_endpoint: str = os.environ.get(self.env_key_token_endpoint)
+        self.oauth_jwks_uri: str = os.environ.get(self.env_key_jwks_uri)
+        self.oauth_scope: str = os.environ.get(self.env_key_scope)
+        self.oauth_redirect_uri: str = os.environ.get(self.env_key_redirect_uri)
+        self.oauth_metadata_url: str = os.environ.get(self.env_key_oauth_metadata_url)
 
 
-# AUTHLIB CLIENTS
-settings = OAuthSettings(_env_file='.env', _env_file_encoding='utf-8')
-
-# Import this into your Django settings
-AUTHLIB_OAUTH_CLIENTS = {
-    'keycloak': {
-        "client_id": settings.oauth_client_id,
-        "client_secret": settings.oauth_client_secret
-    }
-}
+oauth_settings = OAuthSettings()
