@@ -4,16 +4,18 @@
 #  `--. \/ __| '_ \| '__/ _ \ / _ \/ __| |/ /   | |   | |
 # /\__/ / (__| | | | | | (_) |  __/ (__|   <   _| |_  | |
 # \____/ \___|_| |_|_|  \___/ \___|\___|_|\_\  \___/  \_/
-
+import datetime
 import json
 import logging
 
 from authlib.integrations.django_client import OAuth
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 
-from mvv.auth.common.settings import oauth_settings
+
+from .settings import oauth_settings
+from .verify_token import VerifyToken
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +45,22 @@ def protected(roles: list = None):
             """
 
             """
+            if request.headers.get('Authorization', None):
+                logger.info("API login! Parsing API token")
+
+                token = request.META.get('HTTP_AUTHORIZATION', '').replace('Bearer', '').strip()
+
+                profile = VerifyToken(token=token).verify(roles=roles)
+                if not type(profile) is dict:
+                    return HttpResponse(status=401,content=json.dumps({"status": "error",
+                                              "message": "Unexpected response from Token verification"}))
+                if "status" in profile.keys() and profile.get(
+                        "status") == "error":
+                    return HttpResponse(status=401, content=json.dumps({"status": "error",
+                                                             "message": "Unexpected response from Token verification"}))
+
+                return f(request, *args, **kwargs)
+
             try:
                 user = json.loads(
                     request.COOKIES.get('user')) if request.COOKIES.get(
@@ -76,9 +94,14 @@ def login(request):
     :param request:
     :return:
     """
-    redirect_uri = request.build_absolute_uri(reverse('auth'))
-    return oauth.keycloak.authorize_redirect(request, redirect_uri)
 
+    redirect_uri = request.build_absolute_uri(reverse('auth'))
+
+    token = bool(request.GET.get("token", False))
+    if token:
+        print("TOKEN IS TRUE")
+        redirect_uri = redirect_uri + "?token=true"
+    return oauth.keycloak.authorize_redirect(request, redirect_uri)
 
 def auth(request):
     """
@@ -86,10 +109,19 @@ def auth(request):
     :param request:
     :return:
     """
+    deliver_token = bool(request.GET.get("token", False))
     token = oauth.keycloak.authorize_access_token(request)
 
-    response = HttpResponseRedirect("/")
+    if deliver_token:
+        expiry = datetime.datetime.fromtimestamp(token.get('expires_at'))
+        data = {"status": "success", "token": token["access_token"] ,"expires": expiry}
+
+
+        response =  JsonResponse(data, status=200)
+    else:
+        response = HttpResponseRedirect("/")
     response.set_cookie('user', json.dumps(token['userinfo']))
+
     return response
 
 

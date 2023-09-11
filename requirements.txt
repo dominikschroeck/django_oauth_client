@@ -1,5 +1,3 @@
 Django
 Authlib
 requests
-
-mvv.auth.common
