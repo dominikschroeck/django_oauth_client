@@ -16,7 +16,7 @@ from django.urls import reverse
 from .settings import oauth_settings
 from .verify_token import VerifyToken
 
-from mvv.auth.common.settings import oauth_settings
+from .settings import oauth_settings
 
 
 logger = logging.getLogger(__name__)
