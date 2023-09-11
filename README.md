@@ -49,6 +49,8 @@ Securing your endpoints using OAuth is a straightforward process:
 
     By applying the `@protected` decorator to your views, you can enforce role-based access control on your Django application's endpoints, ensuring that only authorized users can access protected resources.
 
+4. ** How to retrieve a token for API Access**: Simply access the ``login`` endpoint with an additional ``?token=True`` from your browser once to get a token from Keycloak that you can use as ``Bearer`` token in the ``Authorization`` header.
+
 By following these steps, you can seamlessly integrate OAuth authentication into your Django application, enhancing security and access control for your users.
 
 Contact: [hello@schroeck-consulting.de](mailto:hello@schroeck-consulting.de)
