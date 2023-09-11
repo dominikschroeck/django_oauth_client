@@ -4,6 +4,9 @@
 #  `--. \/ __| '_ \| '__/ _ \ / _ \/ __| |/ /   | |   | |
 # /\__/ / (__| | | | | | (_) |  __/ (__|   <   _| |_  | |
 # \____/ \___|_| |_|_|  \___/ \___|\___|_|\_\  \___/  \_/
+"""
+Main module for OAuth integration into Django applications
+"""
 import datetime
 import json
 import logging
@@ -15,9 +18,6 @@ from django.urls import reverse
 
 from .settings import oauth_settings
 from .verify_token import VerifyToken
-
-from .settings import oauth_settings
-
 
 logger = logging.getLogger(__name__)
 
@@ -38,28 +38,31 @@ def protected(roles: list = None):
     Protect endpoints with role assignment (optional)
     """
 
-    def inner(f):
+    def inner(f): # pylint: disable=invalid-name
         """
         Inner decorator to store 'roles' in this function object
         """
 
-        def wrapper(request, *args, **kwargs):
+        def wrapper(request, *args, **kwargs): # pylint: disable=r0911
             """
 
             """
             if request.headers.get('Authorization', None):
                 logger.info("API login! Parsing API token")
 
-                token = request.META.get('HTTP_AUTHORIZATION', '').replace('Bearer', '').strip()
+                token = request.META.get('HTTP_AUTHORIZATION', '').replace(
+                    'Bearer', '').strip()
 
                 profile = VerifyToken(token=token).verify(roles=roles)
-                if not type(profile) is dict:
-                    return HttpResponse(status=401,content=json.dumps({"status": "error",
-                                              "message": "Unexpected response from Token verification"}))
+                if not isinstance(profile, dict):
+                    return HttpResponse(status=401,
+                                        content=json.dumps({"status": "error",
+                    "message": "Unexpected response from Token verification"}))
                 if "status" in profile.keys() and profile.get(
                         "status") == "error":
-                    return HttpResponse(status=401, content=json.dumps({"status": "error",
-                                                             "message": "Unexpected response from Token verification"}))
+                    return HttpResponse(status=401,
+                                        content=json.dumps({"status": "error",
+                    "message": "Unexpected response from Token verification"}))
 
                 return f(request, *args, **kwargs)
 
@@ -67,7 +70,7 @@ def protected(roles: list = None):
                 user = json.loads(
                     request.COOKIES.get('user')) if request.COOKIES.get(
                     'user') else None
-            except:
+            except Exception as exception:
                 logger.warning("Unable to parse user cookie into dictionary!")
                 return redirect("/login/")
 
@@ -105,6 +108,7 @@ def login(request):
         redirect_uri = redirect_uri + "?token=true"
     return oauth.keycloak.authorize_redirect(request, redirect_uri)
 
+
 def auth(request):
     """
 
@@ -116,10 +120,10 @@ def auth(request):
 
     if deliver_token:
         expiry = datetime.datetime.fromtimestamp(token.get('expires_at'))
-        data = {"status": "success", "token": token["access_token"] ,"expires": expiry}
+        data = {"status": "success", "token": token["access_token"],
+                "expires": expiry}
 
-
-        response =  JsonResponse(data, status=200)
+        response = JsonResponse(data, status=200)
     else:
         response = HttpResponseRedirect("/")
     response.set_cookie('user', json.dumps(token['userinfo']))

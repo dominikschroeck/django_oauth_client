@@ -4,17 +4,24 @@
 #  `--. \/ __| '_ \| '__/ _ \ / _ \/ __| |/ /   | |   | |
 # /\__/ / (__| | | | | | (_) |  __/ (__|   <   _| |_  | |
 # \____/ \___|_| |_|_|  \___/ \___|\___|_|\_\  \___/  \_/
+"""
+This module contains code for token verification and profile extraction from JWT
+tokens
+"""
+import logging
 
 import jwt
 from jwt.exceptions import InvalidTokenError
-import logging
 
 from .settings import OAuthSettings
 
 logger = logging.getLogger(__name__)
 
+
 class VerifyToken:
     """Does all the token verification using PyJWT"""
+
+    signing_key = None
 
     def __init__(self, token):
         """
@@ -77,13 +84,15 @@ class VerifyToken:
             self.signing_key = self.jwks_client.get_signing_key_from_jwt(
                 self.token
             ).key
+
+            return {}
         except jwt.exceptions.PyJWKClientError as error:
             logger.debug(f"PyJWKClientError during Authorisation: "
                          f"'{str(error)}'")
-            return {"status": "error", "msg": error.__str__()}
+            return {"status": "error", "msg": str(error)}
         except jwt.exceptions.DecodeError as error:
             logger.debug(f"DecodeError during Authorisation: '{str(error)}'")
-            return {"status": "error", "msg": error.__str__()}
+            return {"status": "error", "msg": str(error)}
 
     def verify(self, roles: list = None):
         """
@@ -104,9 +113,9 @@ class VerifyToken:
             logger.debug("Attempting to load payload from token")
             payload = self.decode_token()
 
-        except InvalidTokenError as e:
-            logger.info(f"Error decoding token: '{str(e)}'")
-            return {"status": "error", "message": str(e)}
+        except InvalidTokenError as exception:
+            logger.info(f"Error decoding token: '{str(exception)}'")
+            return {"status": "error", "message": str(exception)}
 
         # Verify roles
         permitted = self.verify_roles(roles=roles, user_roles=payload["roles"])
