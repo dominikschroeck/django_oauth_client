@@ -38,12 +38,12 @@ def protected(roles: list = None):
     Protect endpoints with role assignment (optional)
     """
 
-    def inner(f): # pylint: disable=invalid-name
+    def inner(f):  # pylint: disable=invalid-name
         """
         Inner decorator to store 'roles' in this function object
         """
 
-        def wrapper(request, *args, **kwargs): # pylint: disable=r0911
+        def wrapper(request, *args, **kwargs):  # pylint: disable=r0911
             """
 
             """
@@ -56,13 +56,11 @@ def protected(roles: list = None):
                 profile = VerifyToken(token=token).verify(roles=roles)
                 if not isinstance(profile, dict):
                     return HttpResponse(status=401,
-                                        content=json.dumps({"status": "error",
-                    "message": "Unexpected response from Token verification"}))
+                                        content=json.dumps({"status": "error", "message": "Unexpected response from Token verification"}))
                 if "status" in profile.keys() and profile.get(
                         "status") == "error":
                     return HttpResponse(status=401,
-                                        content=json.dumps({"status": "error",
-                    "message": "Unexpected response from Token verification"}))
+                                        content=json.dumps({"status": "error", "message": "Unexpected response from Token verification"}))
 
                 return f(request, *args, **kwargs)
 
@@ -71,7 +69,7 @@ def protected(roles: list = None):
                     request.COOKIES.get('user')) if request.COOKIES.get(
                     'user') else None
             except Exception as exception:
-                logger.warning("Unable to parse user cookie into dictionary!")
+                logger.warning(f"Unable to parse user cookie into dictionary: '{str(exception)}'")
                 return redirect("/login/")
 
             if user:
