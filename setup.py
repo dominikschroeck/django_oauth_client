@@ -18,7 +18,7 @@ requirements = open("requirements.txt").read().split("\n")
 
 
 setup(
-    name="sit-consulting.auth.django",
+    name="django_oauth_client",
     version=version,
     description="Django Authentication",
     long_description=io.open("README.md", encoding="utf8").read()+ "\n",
