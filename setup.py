@@ -25,6 +25,7 @@ setup(
     #+ io.open(os.path.join("docs", "source", "HISTORY.rst"), encoding="utf8").read(),
     # Get more strings from
     # http://www.python.org/pypi?%3Aaction=list_classifiers
+    long_description_content_type='text/markdown',
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.9",
