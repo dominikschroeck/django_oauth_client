@@ -8,7 +8,7 @@ import json
 
 from django.shortcuts import render
 
-from mvv.auth.django.oauth import protected
+from django_oauth_client.oauth import protected
 
 
 @protected()

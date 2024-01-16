@@ -18,9 +18,9 @@ requirements = open("requirements.txt").read().split("\n")
 
 
 setup(
-    name="mvv.auth.django",
+    name="sit-consulting.auth.django",
     version=version,
-    description="MVV Django Authentication",
+    description="Django Authentication",
     long_description=io.open("README.md", encoding="utf8").read()+ "\n",
     #+ io.open(os.path.join("docs", "source", "HISTORY.rst"), encoding="utf8").read(),
     # Get more strings from
@@ -36,7 +36,7 @@ setup(
     url="http://pypi.python.org/projects/xxxx",
     license="GPL",
     packages=find_packages(exclude=["ez_setup"]),
-    namespace_packages=["mvv", "mvv.auth"],
+    namespace_packages=["django_oauth_client"],
     include_package_data=True,
     zip_safe=False,
     tests_require=["pytest"],

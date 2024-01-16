@@ -3,3 +3,11 @@ flake8
 pylint
 safety
 pip-audit
+pytest
+pycryptodome
+pytest-cov
+pytest-azurepipelines
+pytest-parallel
+py
+typeguard
+bandit

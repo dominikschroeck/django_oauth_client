@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 
 from example import views
-from mvv.auth.django.oauth import login, auth, logout
+from django_oauth_client.oauth import login, auth, logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),

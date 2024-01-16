@@ -18,28 +18,16 @@ class OAuthSettings:
 
     env_key_client_id = "OAUTH_CLIENT_ID"
     env_key_client_secret = "OAUTH_CLIENT_SECRET"
-    env_key_authorization_endpoint = "OAUTH_AUTHORIZATION_ENDPOINT"
-    env_key_revoke_token_endpoint = "OAUTH_REVOKE_ENDPOINT"
-    env_key_token_endpoint = "OAUTH_TOKEN_ENDPOINT"
     env_key_jwks_uri = "OAUTH_JWKS_URI"
     env_key_scope = "OAUTH_SCOPE"
-    env_key_redirect_uri = "OAUTH_REDIRECT_URI"
     env_key_oauth_metadata_url = "OAUTH_METADATA_URL"
 
     def __init__(self):
         self.oauth_client_id: str = os.environ.get(self.env_key_client_id)
         self.oauth_client_secret: str = os.environ.get(
             self.env_key_client_secret)
-        self.oauth_authorization_endpoint: str = os.environ.get(
-            self.env_key_authorization_endpoint
-        )
-        self.oauth_revoke_token_endpoint: str = os.environ.get(
-            self.env_key_revoke_token_endpoint)
-        self.oauth_token_endpoint: str = os.environ.get(
-            self.env_key_token_endpoint)
         self.oauth_jwks_uri: str = os.environ.get(self.env_key_jwks_uri)
         self.oauth_scope: str = os.environ.get(self.env_key_scope)
-        self.oauth_redirect_uri: str = os.environ.get(self.env_key_redirect_uri)
         self.oauth_metadata_url: str = os.environ.get(
             self.env_key_oauth_metadata_url)
 

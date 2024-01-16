@@ -31,7 +31,7 @@ class VerifyToken:
         self.token = token
         self.config = OAuthSettings()
 
-        # This gets the JWKS from a given URL and does processing so you can
+        # This gets the JWKS from a given URL and does processing, so you can
         # use any of the keys available
         self.jwks_client = jwt.PyJWKClient(self.config.oauth_jwks_uri)
 

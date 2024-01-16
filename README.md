@@ -2,6 +2,31 @@
 
 This README.md provides instructions on implementing OAuth login within your Django application. OAuth integration allows you to replace local authentication with a remote Identity Provider (IdP) while enabling role-based access control for specific endpoints.
 
+It is the result of a client project of [Schroeck IT Consulting](mailto:hello@schroeck-consulting.de). 
+The goal was a simple Django integration with Keycloak without much manual interference needed. Hence, the code is very much focused on Keycloak.
+
+However, it should work for most other OAuth IdP's. If you require RBAC (Role-based access), make sure to name the claim containing the roles,  ``roles``.
+
+# Features
+
+- Get an API token for your Django app using your favorite IdP via OAuth. This library simplifies the process by giving you the required endpoints and the login mechanism
+- Protect your endpoints by just adding a dependency to the endpoint functions
+- Support for role-based access control for endpoints
+
+## Contact
+
+This library was originally published by [Schroeck IT-Consulting](www.schroeck-consulting.de). 
+
+Email: [hello@schroeck-consulting.de](mailto:hello@schroeck-consulting.de)
+
+## Installation
+
+Simply pull the package from Pypi:
+
+``bash
+pip install django_oauth_client
+``
+
 ## How to Secure Your Endpoints
 
 Securing your endpoints using OAuth is a straightforward process:
@@ -20,7 +45,7 @@ Securing your endpoints using OAuth is a straightforward process:
 
     ```python
     from django.urls import path
-    from mvv.auth.django.oauth import login, auth, logout
+    from django_oauth_client.oauth import login, auth, logout
 
     urlpatterns = [
         ... # other URLs
@@ -36,7 +61,7 @@ Securing your endpoints using OAuth is a straightforward process:
 3. **Protect Endpoints with Roles**: To restrict access to specific endpoints based on roles, use the `@protected` decorator provided by this package in your `views.py` file. In this example, we protect the `protected_endpoint` view, allowing only users with the "admin" role to access it.
 
     ```python
-    from mvv.auth.django.oauth import protected
+    from django_oauth_client.oauth import protected
 
     @protected(roles=["admin"])
     def protected_endpoint(request):

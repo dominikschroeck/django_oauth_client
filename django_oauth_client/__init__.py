@@ -1,6 +1,6 @@
 """
-Auth module
+main module
 """
 from pkg_resources import declare_namespace
 
-declare_namespace("mvv.auth")
+declare_namespace("django_oauth_client")

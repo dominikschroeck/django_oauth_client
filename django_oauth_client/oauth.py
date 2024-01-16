@@ -102,7 +102,6 @@ def login(request):
 
     token = bool(request.GET.get("token", False))
     if token:
-        print("TOKEN IS TRUE")
         redirect_uri = redirect_uri + "?token=true"
     return oauth.keycloak.authorize_redirect(request, redirect_uri)
 
