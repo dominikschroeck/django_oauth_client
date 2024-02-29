@@ -9,7 +9,7 @@ However, it should work for most other OAuth IdP's. If you require RBAC (Role-ba
 
 # Features
 
-- Get an API token for your Django app using your favorite IdP via OAuth. This library simplifies the process by giving you the required endpoints and the login mechanism
+- Get an API token for your Django app using your favorite Identity Provider (IdP) via OAuth. This library simplifies the process by giving you the required endpoints and the login mechanism
 - Protect your endpoints by just adding a dependency to the endpoint functions
 - Support for role-based access control for endpoints
 
